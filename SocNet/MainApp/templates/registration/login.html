@@ -1,0 +1,39 @@
+{% extends 'MainApp/BaseHtml.html' %}
+{% load static %}
+{% block head %}
+<style>
+    DIV.loginMenuLabel{
+        margin-top: 10%;
+        border: 1px solid black;
+        padding: 10px;
+        border-radius: 10px 10px 0 0;
+        background-color: #007bff;
+        color: #fff;
+    }
+    DIV.loginTable{
+        border: 1px solid;
+        text-align: center;
+        padding: 40px;
+        border-radius: 0 0 10px 10px;
+    }
+    DIV.crateAccountText {
+        margin-top: 20px;
+    }
+    INPUT[type='submit']{
+        margin-left: 50%
+    }
+</style>
+{% endblock %}
+{% block body %}
+<div class="container-fluid">
+    <div class="row justify-content-md-center">
+        <div class="col-sm-4 loginMenuLabel">SocNetwork</div>
+    </div>
+    <div class="row justify-content-md-center">
+        <div class="col-sm-4 loginTable">
+        {% include 'registration/form.html' %}
+        <div class="crateAccountText">Or if you don't have account <a href="{% url 'django_registration_register' %}">create</a></div>
+        </div>
+    </div>
+</div>
+{% endblock %}

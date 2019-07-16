@@ -1,0 +1,74 @@
+{% extends 'MainApp/BaseHtml.html' %}
+{% load static %}
+{% block head %}
+<style>
+    DIV.row FIGURE IMG.avatar {
+        min-width: 120px;
+        max-width: 120px;
+        min-height: 120px;
+        max-height: 120px;
+    }
+    DIV.row{
+        margin-top: 10px;
+    }
+</style>
+{% endblock %}
+{% block body %}
+<div class="container-fluid">
+    <div class="row justify-content-md-center">
+        <div class="col-sm-10">
+        {% for elem in chats %}
+        <div class="row">
+            {% if elem.receiver != user %}
+            <figure class="col align-self-center">
+                {% if elem.receiver.is_avatar_add %}
+                    <img src="{{ elem.receiver.avatarused.avatar.avatar.url}}"
+                         class="figure-img img-fluid rounded avatar" alt="Avatar">
+                {% else %}
+                     <img src="{% static 'media/avatar/base_avatar.jpg' %}"
+                         class="figure-img img-fluid rounded avatar" alt="Avatar">
+                {% endif %}
+            </figure>
+            <div class="col">
+                 {% if elem.receiver.get_full_name != "  " %}
+                     {{ elem.receiver.get_full_name }}
+                  {% else %}
+                      {{ elem.receiver.username }}
+                  {% endif %}
+            </div>
+            <div class="col-6">
+                 {{ elem.message.text }}
+            </div>
+            <div class="col-1">
+                 <a href="{% url 'MessageRoom' pk=elem.receiver.id %}">Open Chat</a>
+            </div>
+            {% elif elem.sender != user %}
+            <figure class="col align-self-center">
+                {% if elem.sender.is_avatar_add %}
+                    <img src="{{ elem.sender.avatarused.avatar.avatar.url}}"
+                         class="figure-img img-fluid rounded avatar" alt="Avatar">
+                {% else %}
+                     <img src="{% static 'media/avatar/base_avatar.jpg' %}"
+                         class="figure-img img-fluid rounded avatar" alt="Avatar">
+                {% endif %}
+            </figure>
+            <div class="col">
+                 {% if elem.sender.get_full_name != "  " %}
+                     {{ elem.sender.get_full_name }}
+                  {% else %}
+                      {{ elem.sender.username }}
+                  {% endif %}
+            </div>
+            <div class="col-6">
+                  {{ elem.message.text }}
+            </div>
+            <div class="col-1">
+                 <a href="{% url 'MessageRoom' pk=elem.sender.id %}">Open Chat</a>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

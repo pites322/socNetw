@@ -1,0 +1,111 @@
+{% extends 'MainApp/BaseHtml.html' %}
+{% load static %}
+{% block head %}
+<style>
+    DIV.row FIGURE IMG.avatar {
+        min-width: 120px;
+        max-width: 120px;
+        min-height: 120px;
+        max-height: 120px;
+    }
+    FORM[method="get"] {
+        margin-top: 20px;
+        text-align: center;
+        border: 1px double #007bff;
+        border-radius: 10px 10px 0 0;
+        padding: 15px 0 15px 0;
+        background-color: #007bff;
+    }
+    DIV.userList {
+        border: 1px double #007bff;
+        padding: 50px 30px 50px 30px;
+        border-radius: 0 0 10px 10px;
+    }
+    DIV.elemUserList {
+        padding: 30px 20px 15px 20px;
+        border: 1px double #007bff;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+    BUTTON.searchButton {
+        background-color: white;
+        color: #007bff;
+    }
+    BUTTON.searchButton:hover {
+        background-color: white;
+        color: black;
+    }
+    BUTTON.unsubscribeButton, BUTTON.subscribeButton {
+        background-color: #007bff;
+        color: white;
+    }
+    BUTTON.unsubscribeButton:hover, BUTTON.subscribeButton:hover {
+        background-color: #007bff;
+        color: black;
+    }
+</style>
+{% endblock %}
+{% block body %}
+<div class="container-fluid">
+    <div class="row justify-content-md-center">
+        <div class="col-sm-10">
+            <form method="get">
+              <input name="search" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-success my-2 my-sm-0 searchButton" type="submit">Search</button>
+            </form>
+            <div class="userList">
+                {% for elem in users %}
+                <div class="row elemUserList">
+                    <figure class="col align-self-center">
+                        {% if elem.is_avatar_add %}
+                            <img src="{{ elem.avatarused.avatar.avatar.url}}"
+                                 class="figure-img img-fluid rounded avatar" alt="Avatar">
+                        {% else %}
+                             <img src="{% static 'media/avatar/base_avatar.jpg' %}"
+                                 class="figure-img img-fluid rounded avatar" alt="Avatar">
+                        {% endif %}
+                    </figure>
+                    <div class="col">
+                        <div class="col">Username:</div>
+                        <div class="col">{{ elem.username }}</div>
+                     </div>
+                     <div class="col">
+                         <div class="col">Name:</div>
+                         <div class="col">{{ elem.get_full_name }}</div>
+                     </div>
+                     <div class="col">
+                         <div class="col">Sex:</div>
+                         <div class="col">{{ elem.get_sex_display }}</div>
+                     </div>
+                     <div class="col">
+                         <div class="row">Country:</div>
+                         <div class="row">{{ elem.country }}</div>
+                         <div class="row">City:</div>
+                         <div class="row">{{ elem.city }}</div>
+                     </div>
+                     <div class="col subUnsubButtons">
+                         {% if elem.username in subscribes %}
+                         <button class="btn unsubscribeButton" data-userid="{{ elem.id }}">Unsubscribe</button>
+                         {% elif not elem.id == request.user.id %}
+                         <button class="btn subscribeButton" data-userid="{{ elem.id }}">Subscribe</button>
+                         {% else %}
+                         <div>It's you</div>
+                         {% endif %}
+                     </div>
+                     <div class="col">
+                         {% if elem.id != request.user.id %}
+                         <a href="{% url 'MessageRoom' pk=elem.id %}">Chat</a>
+                         {% elif elem.id == request.user.id %}
+                         <div>It's you</div>
+                         {% endif %}
+                     </div>
+                </div>
+                {% endfor %}
+            </div>
+         </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script src="{% static 'js/SearchUser.js' %}"></script>
+{% endblock %}

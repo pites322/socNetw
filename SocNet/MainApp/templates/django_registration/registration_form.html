@@ -1,0 +1,43 @@
+{% extends 'MainApp/BaseHtml.html' %}
+{% load static %}
+{% block head %}
+<style>
+    DIV.createUserTable{
+        margin-top: 5%;
+        border: 1px solid #007bff;
+        text-align: center;
+        padding: 40px;
+        border-radius: 10px;
+    }
+    DIV.crateAccountText {
+        margin-top: 20px;
+    }
+    INPUT[type='submit']{
+        margin-top: 20px;
+        margin-left: 80%;
+    }
+    TABLE{
+        border-collapse: separate;
+        border-spacing: 10px 30px;
+    }
+    TH {
+        vertical-align: top;
+    }
+</style>
+{% endblock %}
+{% block body %}
+<div class="container-fluid">
+    <div class="row justify-content-md-center">
+        <div class="col-sm-5 createUserTable">
+                <form method="post">
+                {% csrf_token %}
+                <table>
+                {{ form.as_table }}
+                </table>
+                <input type="submit" value="Save">
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

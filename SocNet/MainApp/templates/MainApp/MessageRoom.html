@@ -1,0 +1,102 @@
+{% extends 'MainApp/BaseHtml.html' %}
+{% load static %}
+{% block head %}
+<style>
+    DIV.messageList {
+        border: 1px double #007bff;
+        padding-bottom: 50px;
+    }
+    DIV.income, DIV.sent {
+        border: 1px double black;
+        max-width: 40%;
+        min-height: 70px;
+        padding: 25px 10px 10px 10px;
+        border-radius: 10px;
+        word-wrap: break-word;
+        z-index: 100;
+        position: relative;
+        margin-top: 30px;
+        background-color: white;
+    }
+    DIV.sent {
+        margin-right: auto;
+        background-color: #1E90FF;
+    }
+    DIV.income {
+        text-align: right;
+        margin-left: auto;
+        background-color: #ADFF2F;
+
+    }
+    DIV.income DIV{
+        text-align: left;
+
+    }
+    DIV.sent DIV{
+        text-align: right;
+
+    }
+    DIV.input {
+        margin-bottom: 80px;
+        padding:20px 80px 20px 80px;
+        border-radius: 0 0 10px 10px;
+        background-color: #007bff;
+
+    }
+    DIV.changeMenu {
+        z-index: 400;
+        position: absolute;
+        display: none;
+        top: 1px;
+        opacity: 0.7;
+    }
+    DIV.changeMenu SPAN{
+        margin-right: 10px;
+        cursor: default;
+    }
+    DIV.input TEXTAREA {
+        width: 40%;
+        height: 50px;
+    }
+    DIV.input BUTTON {
+        width: 10%;
+        height: 30px;
+        margin:20px 0 0 20px;
+    }
+    .messageList DIV.message:last-child {
+    }
+</style>
+{% endblock %}
+{% block body %}
+<div class="row justify-content-md-center">
+    <div class="col-sm-8 messageList" data-interlocutorid="{{interlocutor}}">
+    {% for message in messages %}
+        {% if message.sender == request.user %}
+        <div class="sent message" id="Message{{message.id}}" data-id="{{ message.id }}">
+            <div class="changeMenu" id="changeMenuElem{{message.id}}">
+                <span class="dellMessage" data-id="{{ message.id }}">dell</span>
+                <span class="changeMessage" data-id="{{ message.id }}">change</span>
+            </div>
+            <div class="messageBody">{{ message.text }}</div>
+            <div class="date">{{ message.date_of_add }}</div>
+        </div>
+        {% elif message.receiver == request.user %}
+        <div class="income message">
+            <div>{{ message.text }}</div>
+            <div>{{ message.date_of_add }}</div>
+        </div>
+        {% endif %}
+    {% endfor %}
+    </div>
+    <div class="col-sm-8">
+        <div class="row justify-content-md-center input">
+            <textarea maxlength="300" name="message"></textarea>
+            <button title="Add Your Message" class="addMessage">Add</button>
+            <button title="Clean Your Message" class="cleanTextarea">Clean</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script src="{% static 'js/MessageRoom.js' %}"></script>
+{% endblock %}

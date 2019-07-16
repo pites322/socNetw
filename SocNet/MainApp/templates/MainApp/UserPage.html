@@ -1,0 +1,294 @@
+{% extends 'MainApp/BaseHtml.html' %}
+{% load static %}
+{% block head %}
+<style>
+    FIGURE IMG {
+        min-width: 100%;
+        min-height:100%;
+        max-width: 100%;
+        max-height: 100%;
+        box-shadow: 0 0 0 3px #007bff;
+    }
+    DIV.col DIV.row DIV.col {
+        margin: 10px
+    }
+   .avatarListPicture {
+        z-index: 100;
+        padding:10px;
+        margin:10px;
+        position: relative;}
+   .dellMenu {
+        z-index: 400;
+        position: absolute;
+        display: none;
+        width: 120px;
+        height: 20px;
+        padding: 10px;
+        margin: 10px;}
+   .AvatarChangeButtons{
+        display: none;
+   }
+   .AvatarChangeList{
+        display: none;
+   }
+   .avatar_post{
+        box-shadow: 0 0 0 3px #007bff, 0 0 13px #007bff;
+   }
+   DIV.userDataForJSID, DIV.userDataForJSName {
+       display: none;
+   }
+   DIV.postListElem{
+       display: none;
+       margin-top:10px;
+   }
+   DIV.col-sm-10{
+       border: 1px solid #007bff;
+       border-radius: 10px;
+       margin-top: 10px;
+   }
+   div.col-7 {
+       border-left: 1px solid #007bff;
+   }
+   DIV.postListElem DIV:first-child {
+       margin-right: 0px;
+
+   }
+   DIV.postListElem DIV:last-child {
+       margin-right: 0px;
+
+   }
+   DIV.postListElem DIV.col-6 DIV.row {
+       word-wrap: break-word;
+   }
+   DIV.postListElem {
+       margin-top: 30px;
+   }
+   DIV.postBorder {
+       margin-top: 10px;
+       background-color: #007bff;
+   }
+   DIV.postsLabel {
+       padding: 2% 2% 2% 4%;
+       color: white;
+   }
+   DIV.newPostsButton {
+       position: absolute;
+       right: 10px;
+   }
+   DIV.newPostsButton BUTTON{
+       background-color: white;
+       color: #007bff;
+   }
+   DIV.newPostsButton BUTTON:hover{
+       background-color: white;
+       color: black;
+   }
+   BUTTON.ChangeUserData, BUTTON.AvatarChange{
+       background-color: #007bff;
+       color: white;
+   }
+   BUTTON.ChangeUserData:hover, DIV.AvatarChangeButtons DIV BUTTON:hover{
+       background-color: #007bff;
+       color: black;
+   }
+   DIV.statusLabel {
+       background-color: #007bff;
+       color: white;
+       border-radius: 0 8px 0 0;
+   }
+   DIV.AvatarChangeButtons DIV BUTTON {
+       height: 40px;
+       width: 160px;
+       margin-left: 12%;
+       background-color: #007bff;
+   }
+   DIV.postCreatorAvatar {
+       float:left;
+       margin: 20px;
+   }
+   DIV.postData{
+
+   }
+   DIV.postCreatorAvatar IMG{
+       border-radius: 5px;
+   }
+   DIV.postListElem {
+       padding: 10px;
+       border: 1px solid #007bff;
+       border-radius: 10px;
+   }
+   DIV.postListElem DIV {
+       padding: 10px;
+   }
+   DIV.PostTextLabel{
+       margin-top: 5%;
+   }
+</style>
+{% endblock %}
+{% block body %}
+<div class="container-fluid">
+    <div class="row justify-content-md-center">
+        <div class="col-sm-10">
+            <div class="row">
+                 <div class="col-5">
+                     <div class="row">
+                         <div class="col align-self-center">
+                            <br>
+                            <figure class="col align-self-center">
+                                {% if request.user.is_avatar_add %}
+                                    <img src="{{user.avatarused.avatar.avatar.url}}"
+                                         class="figure-img img-fluid rounded avatar" alt="None">
+                                {% else %}
+                                     <img src="{% static 'media/avatar/base_avatar.jpg' %}"
+                                         class="figure-img img-fluid rounded avatar" alt="None">
+                                {% endif %}
+                                <button class="btn AvatarChange">Change avatar</button>
+                            </figure>
+                         </div>
+                     </div>
+                     <div class="row AvatarChangeButtons">
+                          <div class="btn-group">
+                                <button type="button" class="btn btn-secondary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Add New
+                                </button>
+                                <form method="post" class="dropdown-menu p-4" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <p>
+                                    <input type="file" class="" name="avatar">
+                                    </p>
+                                    <input type="submit" value="add">
+                                </form>
+                               <button type="button" class="btn btn-secondary avatarCancel">Cancel</button>
+                               <button type="button" class="btn btn-secondary avatarSave">Save</button>
+                          </div>
+                     </div>
+                     <div class="row AvatarChangeList">
+                         {% for elem in AvatarBase %}
+                         <div class="col-sm-4 avatarListElement" data-id="{{elem.id}}" id="elemAnatarList{{elem.id}}">
+                             <div class="row dellMenu" data-idavatrtodell="{{elem.id}}" id="dellMenu{{elem.id}}"> dell
+                             </div>
+                             <img class="avatarListPicture" id="avatarListElem{{elem.id}}" src="{{ elem.avatar.url }}"
+                                  data-id="{{elem.id}}" data-src="{{ elem.avatar.url }}"
+                                  width="120" height="120" style="">
+                         </div>
+                         {% endfor %}
+                     </div>
+                </div>
+                <div class="col-7">
+                     <div class="row">
+                         <div class="col">
+                             <div class="row statusLabel">
+                                 <div class="col">
+                                     Your status: {{ user.status }}<a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                     (Change)</a>
+                                  <form method="post" class="dropdown-menu p-4">
+                                      {% csrf_token %}
+                                      {{ StatusForm }}
+                                  <input type="submit" value="Save">
+                                  </form>
+                                 </div>
+                             </div>
+                             <div class="row">
+                                 <div class="col">
+                                     Name: {{ user.first_name }}
+                                 </div>
+                             </div>
+                             <div class="row">
+                                 <div class="col">
+                                     Last Name:{{ user.last_name }}
+                                 </div>
+                             </div>
+                             <div class="row">
+                                 <div class="col">
+                                     Surname:{{ user.surname }}
+                                 </div>
+                             </div>
+                             <div class="row">
+                                 <div class="col">
+                                     Sex:{{ user.get_sex_display }}
+                                 </div>
+                             </div>
+                             <div class="row">
+                                 <div class="col">
+                                     Country:{{ user.country }}
+                                 </div>
+                             </div>
+                             <div class="row">
+                                 <div class="col">
+                                     City:{{ user.city }}
+                                 </div>
+                             </div>
+                             <div class="row">
+                                 <div class="col">
+                                     Hobbies:{{ user.hobby }}
+                                 </div>
+                             </div>
+                             <div class="btn-group">
+                              <button type="button" class="btn btn-secondary dropdown-toggle ChangeUserData" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Change Data
+                              </button>
+                                  <form method="post" class="dropdown-menu p-4">
+                                      <table>
+                                         {% csrf_token %}
+                                         {{ UserInfoForm }}
+                                      </table>
+                                      <input type="submit" value="Save">
+                                  </form>
+                              </div>
+                             <div class="row postBorder">
+                                 <div class="postsLabel">Posts:</div>
+                                 <div class="btn newPostsButton">
+                                  <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Add New
+                                  </button>
+                                      <form method="post" enctype="multipart/form-data" class="dropdown-menu p-4" >
+                                         {% csrf_token %}
+                                         {{ PostForm }}
+                                      <p>
+                                        <input type="file" class="" name="picture">
+                                      </p>
+                                      <input type="submit" value="Save">
+                                      </form>
+                                 </div>
+                             </div>
+                            <div class="col-12 postList">
+                                 {% for post in post_from_subscribe %}
+                                    <div class="row postListElem">
+                                       <div class="col-4 postCreatorAvatar">
+                                            {% if post.creator.is_avatar_add %}
+                                                <img src="{{post.creator.avatarused.avatar.avatar.url}}"
+                                                     class="figure-img img-fluid avatar_post" alt="Avatar" width="80" height="80">
+                                            {% else %}
+                                                 <img src="{% static 'media/avatar/base_avatar.jpg' %}"
+                                                     class="figure-img img-fluid avatar_post" alt="Avatar" width="80" height="80">
+                                            {% endif %}
+                                       </div>
+                                       <div class="col-10 postData">
+                                            <div class="row">Post Name:</div>
+                                            <div class="row">{{ post.name }}</div>
+                                            <div class="row PostTextLabel">Text:</div>
+                                            <div class="row">{{ post.body }}</div>
+                                            <div class="row">{{ post.rating }}</div>
+                                              {% if post.creator.id == request.user.id %}
+                                                <div><a href="{% url 'post_change' pk=post.id %}">Change_data</a></div>
+                                              {% else %}
+                                                <div>Like</div>
+                                              {% endif %}
+                                          {% if post.picturetopost_set.all.0 %}
+                                          <img src="{{ post.picturetopost_set.all.0.picture.url }}" width="200" height="200" alt="Post Picture">
+                                          {% endif %}
+                                       </div>
+                                    </div>
+                                  {% endfor %}
+                             </div>
+                         </div>
+                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'js/UserPage.js' %}"></script>
+{% endblock %}

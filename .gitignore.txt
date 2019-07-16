@@ -1,0 +1,7 @@
+/SNVenv
+SNVenv
+/migrations
+/.idea
+/static
+migrations
+.idea
